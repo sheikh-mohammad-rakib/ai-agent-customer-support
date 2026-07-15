@@ -30,3 +30,5 @@ env/
 walkthrough.md
 implementation_plan.md
 support_agent.db 
+
+.agents
