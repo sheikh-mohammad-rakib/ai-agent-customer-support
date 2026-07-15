@@ -1,6 +1,6 @@
 # Acme Retail — Qwen Cloud Voice AI Customer Support Agent
 
-A production-grade, real-time Telephony & Browser Voice AI Customer Support Agent powered natively by **Qwen Cloud (`qwen3-asr-flash-realtime` + `qwen-max` + `cosyvoice-v3-plus`)**, deployed on **Render** with a managed **PostgreSQL** database.
+A production-grade, real-time Telephony & Browser Voice AI Customer Support Agent powered natively by **Qwen Cloud (`qwen3-asr-flash-realtime` + `qwen-max` + `cosyvoice-v3-plus`)**, deployed on **Render** with a free **[Neon](https://neon.tech) PostgreSQL** database.
 
 ## Features
 
@@ -39,7 +39,7 @@ ADMIN_TOKEN=any_secret_string_you_choose
 PORT=8000
 ```
 
-> For local development you can use a free [Neon](https://neon.tech) or [Supabase](https://supabase.com) PostgreSQL instance for `DATABASE_URL`.
+> For local development, use a free [Neon](https://neon.tech) PostgreSQL instance — no credit card required. Create a project, copy the connection string, and paste it as `DATABASE_URL`.
 
 ### 2. Install Dependencies
 
@@ -73,28 +73,31 @@ git remote add origin https://github.com/<your-username>/<repo-name>.git
 git push -u origin main
 ```
 
-### 2. Deploy via Render Blueprint
+### 2. Create a Free Neon Database
 
-1. Go to [render.com](https://render.com) → **New** → **Blueprint**
+1. Go to [neon.tech](https://neon.tech) → sign up free (no credit card)
+2. Create a new project → copy the **Connection string** (starts with `postgresql://...`)
+3. Save it — you'll paste it into Render as `DATABASE_URL`
+
+### 3. Deploy on Render
+
+1. Go to [render.com](https://render.com) → **New** → **Web Service**
 2. Connect your GitHub account and select the repo
-3. Render reads `render.yaml` and automatically creates:
-   - The **web service** (Python, uvicorn)
-   - A linked **PostgreSQL database** (`acme-support-db`)
+3. Render auto-detects `render.yaml` — confirm the settings
 
-### 3. Set Secret Environment Variables
+### 4. Set Environment Variables in Render
 
-In the Render dashboard → your web service → **Environment**, add:
+In the Render dashboard → your web service → **Environment**, add all 5 variables:
 
 | Variable | Value |
 |---|---|
+| `DATABASE_URL` | Your Neon connection string |
 | `DASHSCOPE_API_KEY` | Your Qwen Cloud / DashScope key |
 | `TWILIO_ACCOUNT_SID` | From your [Twilio console](https://console.twilio.com) |
 | `TWILIO_AUTH_TOKEN` | From your [Twilio console](https://console.twilio.com) |
 | `ADMIN_TOKEN` | Any secret string you choose |
 
-> `DATABASE_URL` is injected **automatically** by Render — do not set it manually.
-
-### 4. Wire Your Twilio Phone Number
+### 5. Wire Your Twilio Phone Number
 
 In the Twilio console, set the webhook for your phone number:
 - **When a call comes in** → `POST` → `https://<your-service>.onrender.com/incoming-call`
